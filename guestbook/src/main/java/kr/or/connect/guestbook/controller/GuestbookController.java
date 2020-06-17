@@ -22,25 +22,34 @@ public class GuestbookController {
 	GuestbookService guestbookService;
 	
 	@GetMapping(path="/list")
-	public String list(@RequestParam(name="start",required=false,defaultValue="0")int start,
-			ModelMap model) {
-		List<Guestbook>list = guestbookService.getGuestbooks(start);
+	public String list(@RequestParam(name="start", required=false, defaultValue="0") int start,
+					   ModelMap model) {
 		
+		// start로 시작하는 방명록 목록 구하기
+		List<Guestbook> list = guestbookService.getGuestbooks(start);
+		
+		// 전체 페이지수 구하기
 		int count = guestbookService.getCount();
-		int pageCount = count/GuestbookService.LIMIT;
-		if(count%GuestbookService.LIMIT>0)
+		int pageCount = count / GuestbookService.LIMIT;
+		if(count % GuestbookService.LIMIT > 0)
 			pageCount++;
 		
-		List<Integer>pageStartList = new ArrayList<>();
-		for(int i=0;i<pageCount;++i) {
-			pageStartList.add(i*GuestbookService.LIMIT);
+		// 페이지 수만큼 start의 값을 리스트로 저장
+		// 예를 들면 페이지수가 3이면
+		// 0, 5, 10 이렇게 저장된다.
+		// list?start=0 , list?start=5, list?start=10 으로 링크가 걸린다.
+		List<Integer> pageStartList = new ArrayList<>();
+		for(int i = 0; i < pageCount; i++) {
+			pageStartList.add(i * GuestbookService.LIMIT);
 		}
-		model.addAttribute("list",list);
-		model.addAttribute("count",count);
-		model.addAttribute("pageStartList",pageStartList);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("count", count);
+		model.addAttribute("pageStartList", pageStartList);
 		
 		return "list";
 	}
+	
 	@PostMapping(path="/write")
 	public String write(@ModelAttribute Guestbook guestbook,
 						HttpServletRequest request) {

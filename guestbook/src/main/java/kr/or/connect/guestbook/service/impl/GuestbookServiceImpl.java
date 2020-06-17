@@ -14,7 +14,6 @@ import kr.or.connect.guestbook.dto.Log;
 import kr.or.connect.guestbook.service.GuestbookService;
 
 @Service
-@Transactional
 public class GuestbookServiceImpl implements GuestbookService{
 	@Autowired
 	GuestbookDao guestbookDao;
@@ -23,8 +22,8 @@ public class GuestbookServiceImpl implements GuestbookService{
 	LogDao logDao;
 
 	@Override
+	@Transactional
 	public List<Guestbook> getGuestbooks(Integer start) {
-		
 		List<Guestbook> list = guestbookDao.selectAll(start, GuestbookService.LIMIT);
 		return list;
 	}
@@ -46,19 +45,25 @@ public class GuestbookServiceImpl implements GuestbookService{
 	public Guestbook addGuestbook(Guestbook guestbook, String ip) {
 		guestbook.setRegdate(new Date());
 		Long id = guestbookDao.insert(guestbook);
+		guestbook.setId(id);
 		
+//		if(1 == 1)
+//			throw new RuntimeException("test exception");
+//			
 		Log log = new Log();
 		log.setIp(ip);
 		log.setMethod("insert");
 		log.setRegdate(new Date());
 		logDao.insert(log);
 		
+		
 		return guestbook;
 	}
 
 	@Override
 	public int getCount() {
-		
 		return guestbookDao.selectCount();
 	}
+	
+	
 }
