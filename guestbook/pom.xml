@@ -68,7 +68,7 @@
     <dependency>
     	<groupId>mysql</groupId>
     	<artifactId>mysql-connector-java</artifactId>
-    	<version>5.1.45</version>
+    	<version>8.0.28</version>
     </dependency>
     <dependency><!-- basic data 소스 -->
 			<groupId>org.apache.commons</groupId>
